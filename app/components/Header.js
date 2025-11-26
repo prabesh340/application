@@ -3,7 +3,8 @@ import React, { useState, useRef } from "react";
 import { gsap } from "gsap";
 import { useGSAP } from "@gsap/react";
 import Navbar from "./Navbar";
-import { Squash as Hamburger } from "hamburger-react";
+import { Squeeze as Hamburger } from "hamburger-react";
+import MagnetEffect from "./MagnetEffect";
 
 gsap.registerPlugin(useGSAP);
 
@@ -32,23 +33,32 @@ const Header = () => {
       timelineRef.current.reverse();
     }
   };
+  const linkMenuClose = () => {
+    setIsMenuOpen(false);
+    timelineRef.current.reverse();
+  };
 
   return (
     <>
       <div className="fixed w-full py-2 justify-between items-center flex px-4 sm:px-10 z-50">
-        <div className="part-1">
-          <img src="/LEXI.png" alt="logo" className="h-14 sm:h-20 " />
-        </div>
-        <div className="part-2 bg-white  rounded-full">
-          <Hamburger
-            toggled={isMenuOpen}
-            toggle={toggleMenu}
-            duration={0.6}
-            size={25}
-          />
-        </div>
+        <MagnetEffect>
+          <div className="part-1 cursor-pointer" onClick={linkMenuClose}>
+            <img src="/LEXI.png" alt="logo" className="h-14 sm:h-20 " />
+          </div>
+        </MagnetEffect>
+        <MagnetEffect>
+          <div className="part-2 bg-white  rounded-full">
+            <Hamburger
+              toggled={isMenuOpen}
+              toggle={toggleMenu}
+              duration={0.6}
+              size={25}
+            />
+          </div>
+        </MagnetEffect>
       </div>
-      <Navbar ref={navRef} />
+
+      <Navbar ref={navRef} linkMenuClose={linkMenuClose} />
     </>
   );
 };
