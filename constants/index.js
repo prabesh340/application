@@ -2,7 +2,7 @@ const navLinks = [
  {
 	id: "home",
 	title: "home",
-	href:"#"
+	href:"/"
  },
  {
 	id: "about",

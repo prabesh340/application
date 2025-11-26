@@ -32,6 +32,10 @@ const Header = () => {
       timelineRef.current.reverse();
     }
   };
+  const linkMenuClose = () => {
+    setIsMenuOpen(false);
+    timelineRef.current.reverse();
+  }
 
   return (
     <>
@@ -48,7 +52,7 @@ const Header = () => {
           />
         </div>
       </div>
-      <Navbar ref={navRef} />
+      <Navbar ref={navRef} linkMenuClose={linkMenuClose} />
     </>
   );
 };

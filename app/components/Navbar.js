@@ -1,12 +1,15 @@
 "use client";
-import React, { forwardRef } from "react";
+import React, { forwardRef, useState } from "react";
 import { Antonio } from "next/font/google";
 import { navLinks } from "@/constants";
+import Link from "next/link";
 const antonio = Antonio({
   subsets: ["latin"],
   weight: ["100", "300", "400", "500", "600", "700"],
 });
-const Navbar = forwardRef((props, ref) => {
+const Navbar = forwardRef(({ linkMenuClose }, ref) => {
+  const [hoveredIdx, setHoveredIdx] = useState(null);
+
   return (
     <div
       ref={ref}
@@ -22,12 +25,24 @@ const Navbar = forwardRef((props, ref) => {
             <ul
               className={`space-y-4 md:space-y-2 text-5xl md:text-9xl tracking-tighter font-bold text-[#ffff] ${antonio.className}`}
             >
-              {navLinks.map((link) => {
+              {navLinks.map((link, idx) => {
                 return (
                   <li key={link.id}>
-                    <a href={link.href} className="hover:text-gray-700 capitalize">
+                    <Link
+                      href={link.href}
+                      className={`capitalize transition-opacity duration-200 ${
+                        hoveredIdx === null
+                          ? ""
+                          : hoveredIdx === idx
+                          ? "opacity-100"
+                          : "opacity-40"
+                      }`}
+                      onMouseEnter={() => setHoveredIdx(idx)}
+                      onMouseLeave={() => setHoveredIdx(null)}
+                      onClick={linkMenuClose}
+                    >
                       {link.title}
-                    </a>
+                    </Link>
                   </li>
                 );
               })}
