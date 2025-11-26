@@ -5,16 +5,14 @@ import React, { useEffect, useRef } from "react";
 const MagnetEffect = ({ children }) => {
   const ref = useRef(null);
   useEffect(() => {
+    if (typeof window === 'undefined' || window.innerWidth < 1024) return;
     const xTo = gsap.quickTo(ref.current, "x", {
       duration: 1,
       ease: "elastic.out(1, 0.4)",
-        
     });
     const yTo = gsap.quickTo(ref.current, "y", {
       duration: 1,
       ease: "elastic.out(1, 0.4)",
-    
-
     });
     const mouseMove = (e) => {
       const { clientX, clientY } = e;

@@ -3,7 +3,7 @@ import React, { useState, useRef } from "react";
 import { gsap } from "gsap";
 import { useGSAP } from "@gsap/react";
 import Navbar from "./Navbar";
-import { Squash as Hamburger } from "hamburger-react";
+import { Squeeze as Hamburger } from "hamburger-react";
 import MagnetEffect from "./MagnetEffect";
 
 gsap.registerPlugin(useGSAP);
@@ -42,7 +42,7 @@ const Header = () => {
     <>
       <div className="fixed w-full py-2 justify-between items-center flex px-4 sm:px-10 z-50">
         <MagnetEffect>
-          <div className="part-1 cursor-pointer">
+          <div className="part-1 cursor-pointer" onClick={linkMenuClose}>
             <img src="/LEXI.png" alt="logo" className="h-14 sm:h-20 " />
           </div>
         </MagnetEffect>
