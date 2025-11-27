@@ -1,14 +1,89 @@
 "use client";
-import React, { forwardRef, useState } from "react";
+import React, { forwardRef, useState, useRef } from "react";
 import { Antonio } from "next/font/google";
-import { navLinks } from "@/constants";
+import { navLinks, NavImage, defaultImg } from "@/constants";
 import Link from "next/link";
+import { gsap } from "gsap";
+import { useGSAP } from "@gsap/react";
+
+gsap.registerPlugin(useGSAP);
 const antonio = Antonio({
   subsets: ["latin"],
   weight: ["100", "300", "400", "500", "600", "700"],
 });
+
 const Navbar = forwardRef(({ linkMenuClose }, ref) => {
   const [hoveredIdx, setHoveredIdx] = useState(null);
+  const imgRefs = useRef({});
+  const defaultRef = useRef(null);
+  const currentImgRef = useRef(null);
+
+  useGSAP(() => {
+    // Set initial state
+    gsap.set(defaultRef.current, { autoAlpha: 1, scale: 1 });
+    NavImage.forEach((img) => {
+      gsap.set(imgRefs.current[img.key], { autoAlpha: 0, scale: 1.1 });
+    });
+  });
+
+  const handleMouseEnter = (linkId) => {
+    setHoveredIdx(navLinks.findIndex(link => link.id === linkId));
+    
+    // Hide default image smoothly
+    gsap.to(defaultRef.current, {
+      autoAlpha: 0,
+      duration: 0.4,
+      ease: "power2.out"
+    });
+
+    // Hide current image if exists
+    if (currentImgRef.current && currentImgRef.current !== linkId) {
+      gsap.to(imgRefs.current[currentImgRef.current], {
+        autoAlpha: 0,
+        scale: 1,
+        duration: 0.4,
+        ease: "power2.out"
+      });
+    }
+
+    // Show new image with smooth transition
+    gsap.fromTo(
+      imgRefs.current[linkId],
+      { autoAlpha: 0, scale: 1.1 },
+      {
+        autoAlpha: 1,
+        scale: 1,
+        duration: 0.6,
+        ease: "power2.out"
+      }
+    );
+
+    currentImgRef.current = linkId;
+  };
+
+  const handleMouseLeave = () => {
+    setHoveredIdx(null);
+    
+    // Hide all nav images
+    NavImage.forEach((img) => {
+      gsap.to(imgRefs.current[img.key], {
+        autoAlpha: 0,
+        scale: 1.1,
+        duration: 0.4,
+        ease: "power2.in"
+      });
+    });
+
+    // Show default image
+    gsap.to(defaultRef.current, {
+      autoAlpha: 1,
+      duration: 0.5,
+      ease: "power2.out",
+      delay: 0.1
+    });
+
+    currentImgRef.current = null;
+  };
 
   return (
     <div
@@ -29,16 +104,17 @@ const Navbar = forwardRef(({ linkMenuClose }, ref) => {
                 return (
                   <li key={link.id}>
                     <Link
+                      id={link.id}
                       href={link.href}
-                      className={`capitalize transition-opacity duration-200 ${
+                      className={`capitalize transition-opacity duration-300 ease-out ${
                         hoveredIdx === null
                           ? ""
                           : hoveredIdx === idx
                           ? "opacity-100"
                           : "opacity-40"
                       }`}
-                      onMouseEnter={() => setHoveredIdx(idx)}
-                      onMouseLeave={() => setHoveredIdx(null)}
+                      onMouseEnter={() => handleMouseEnter(link.id)}
+                      onMouseLeave={handleMouseLeave}
                       onClick={linkMenuClose}
                     >
                       {link.title}
@@ -50,12 +126,22 @@ const Navbar = forwardRef(({ linkMenuClose }, ref) => {
           </nav>
         </div>
         {/* Photo Section - hidden on mobile */}
-        <div className="hidden md:flex justify-center items-center w-full md:w-1/2 h-1/2 md:h-full bg-white">
+        <div className="hidden md:flex justify-center items-center w-full md:w-1/2 h-1/2 md:h-full bg-white relative overflow-hidden">
           <img
-            src="/can1.webp"
-            alt="Profile"
-            className="object-cover w-full h-full"
+            ref={defaultRef}
+            src={defaultImg}
+            alt="default"
+            className="object-cover w-full h-full absolute top-0 left-0"
           />
+          {NavImage.map((img) => (
+            <img
+              key={img.key}
+              ref={(el) => (imgRefs.current[img.key] = el)}
+              src={img.url}
+              alt={img.class}
+              className="object-cover w-full h-full absolute top-0 left-0"
+            />
+          ))}
         </div>
       </div>
     </div>
