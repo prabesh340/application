@@ -5,7 +5,7 @@ import { Anton } from "next/font/google";
 import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
 import { fruits } from "@/constants";
-import { ArrowLeft, ArrowRight } from "lucide-react";
+import { ChevronLeft, ChevronRight } from "lucide-react";
 
 const anton = Anton({
   subsets: ["latin"],
@@ -29,12 +29,13 @@ const Hero = () => {
         )
         .to(
           ".can_img_1",
-          { y: "100%", duration: 1, ease: "back.out(-4)" },
+          { y: "100%", rotate: -10, duration: 1, ease: "back.out(-4)" },
           "step1"
         )
-        .to(
+        .fromTo(
           ".can_img_2",
-          { y: "-100%", duration: 1, ease: "back.out(-4)" },
+          { rotation: -10 },
+          { rotation: 0, y: "-100%", duration: 1, ease: "back.out(-4)" },
           "step1"
         )
         .to(".svg2 path", { fill: "#C1570D", duration: 1 }, "step1")
@@ -49,12 +50,13 @@ const Hero = () => {
         )
         .to(
           ".can_img_2",
-          { y: "100%", duration: 1, ease: "back.out(-4)" },
+          { y: "100%", rotate: -10, duration: 1, ease: "back.out(-4)" },
           "step2"
         )
-        .to(
+        .fromTo(
           ".can_img_3",
-          { y: "-100%", duration: 1, ease: "back.out(-4)" },
+          { rotation: -10 }, // starting state
+          { rotation: 0, y: "-100%", duration: 1, ease: "back.out(-4)" }, // end state
           "step2"
         )
         .to(".svg1 path", { fill: "#CF4244", duration: 1 }, "step2")
@@ -171,19 +173,19 @@ const Hero = () => {
       </div>
       <div className="button absolute bottom-0 left-0 w-full h-1/3 flex items-center justify-between px-10 z-10">
         <button
-          className="p-4 bg-white/10 hover:bg-white/20 rounded-full backdrop-blur-md transition cursor-pointer"
+          className="p-4 sm:p-6 bg-white/10 hover:bg-white/20 rounded-full backdrop-blur-md transition cursor-pointer border-white/20 border-2"
           id="prevBtn"
           onClick={handlePrev}
         >
-          <ArrowLeft size={40} color="white" />
+          <ChevronLeft strokeWidth={1.5} size={40} color="white" />
         </button>
 
         <button
-          className="p-4 bg-white/10 hover:bg-white/20 rounded-full backdrop-blur-md transition cursor-pointer"
+          className="p-4 sm:p-6 bg-white/10 hover:bg-white/20 rounded-full backdrop-blur-md transition cursor-pointer border-white/20 border-2"
           id="nextBtn"
           onClick={handleNext}
         >
-          <ArrowRight size={40} color="white" />
+          <ChevronRight strokeWidth={1.5} size={40} color="white" />
         </button>
       </div>
     </div>
