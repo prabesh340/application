@@ -1,14 +1,125 @@
 "use client";
-import React, { forwardRef, useState } from "react";
+import React, { forwardRef, useState, useRef } from "react";
 import { Antonio } from "next/font/google";
-import { navLinks } from "@/constants";
+import { navLinks, NavImage, defaultImg } from "@/constants";
 import Link from "next/link";
+import { gsap } from "gsap";
+import { useGSAP } from "@gsap/react";
+
+gsap.registerPlugin(useGSAP);
 const antonio = Antonio({
   subsets: ["latin"],
   weight: ["100", "300", "400", "500", "600", "700"],
 });
+
 const Navbar = forwardRef(({ linkMenuClose }, ref) => {
   const [hoveredIdx, setHoveredIdx] = useState(null);
+  const imgRefs = useRef({});
+  const defaultRef = useRef(null);
+  const pillRef = useRef(null);
+  const currentImageIdRef = useRef(0);
+  const navContainerRef = useRef(null);
+
+  const isDesktop = () => typeof window !== 'undefined' && window.innerWidth >= 768;
+
+  useGSAP(() => {
+    if (!isDesktop()) return;
+    // Set initial state - default visible, all nav images hidden
+    gsap.set(defaultRef.current, { zIndex: 10, opacity: 1 });
+    NavImage.forEach((img) => {
+      gsap.set(imgRefs.current[img.key], { zIndex: 0, opacity: 0 });
+    });
+  });
+
+  const showImage = (linkId, linkIndex) => {
+    if (!isDesktop()) return;
+    const targetImageId = linkIndex + 1;
+    const rotationValue = 0;
+
+
+
+    // Hide default image
+    gsap.set(defaultRef.current, {
+      zIndex: 0,
+      opacity: 0,
+    });
+
+    // Hide all nav images
+    NavImage.forEach((img) => {
+      gsap.set(imgRefs.current[img.key], {
+        zIndex: 0,
+        opacity: 0,
+      });
+    });
+
+    // Show target image
+    gsap.set(imgRefs.current[linkId], {
+      zIndex: 10,
+      opacity: 1,
+    });
+
+    currentImageIdRef.current = targetImageId;
+  };
+
+  const showDefaultImage = () => {
+    if (!isDesktop()) return;
+    const rotationValue = 0;
+
+    // Rotate the pill container
+    gsap.to(pillRef.current, {
+      rotation: rotationValue,
+      duration: 0.4,
+      onComplete: function () {
+        gsap.set(pillRef.current, {
+          rotation: 0,
+        });
+      },
+    });
+
+    // Hide all nav images
+    NavImage.forEach((img) => {
+      gsap.set(imgRefs.current[img.key], {
+        zIndex: 0,
+        opacity: 0,
+      });
+    });
+
+    // Show default image
+    gsap.set(defaultRef.current, {
+      zIndex: 10,
+      opacity: 1,
+    });
+
+    currentImageIdRef.current = 0;
+  };
+
+  const handleNavMouseMove = (e) => {
+    if (!isDesktop()) return;
+    const target = e.target.closest('a');
+    if (target && target.id) {
+      const rect = target.getBoundingClientRect();
+      const mouseY = e.clientY;
+      const linkCenter = rect.top + rect.height / 2;
+      const threshold = rect.height * 0.3; // 30% from center
+      
+      // Only trigger if mouse is within center 60% of the link (30% on each side)
+      const distanceFromCenter = Math.abs(mouseY - linkCenter);
+      
+      if (distanceFromCenter <= threshold) {
+        const linkIndex = navLinks.findIndex(link => link.id === target.id);
+        if (linkIndex !== -1 && hoveredIdx !== linkIndex) {
+          setHoveredIdx(linkIndex);
+          showImage(target.id, linkIndex);
+        }
+      }
+    }
+  };
+
+  const handleNavMouseLeave = () => {
+    if (!isDesktop()) return;
+    setHoveredIdx(null);
+    showDefaultImage();
+  };
 
   return (
     <div
@@ -21,7 +132,12 @@ const Navbar = forwardRef(({ linkMenuClose }, ref) => {
       <div className="flex flex-col md:flex-row h-full">
         {/* Navigation Links Section */}
         <div className="flex flex-col justify-center items-center w-full md:w-1/2 h-1/2 md:h-full">
-          <nav className="text-center w-full">
+          <nav 
+            ref={navContainerRef}
+            className="text-center w-full"
+            onMouseMove={handleNavMouseMove}
+            onMouseLeave={handleNavMouseLeave}
+          >
             <ul
               className={`space-y-4 md:space-y-2 text-5xl md:text-9xl tracking-tighter font-bold text-[#ffff] ${antonio.className}`}
             >
@@ -29,16 +145,15 @@ const Navbar = forwardRef(({ linkMenuClose }, ref) => {
                 return (
                   <li key={link.id}>
                     <Link
+                      id={link.id}
                       href={link.href}
-                      className={`capitalize transition-opacity duration-200 ${
+                      className={`capitalize leading-0.5 transition-opacity duration-200 ease-out ${
                         hoveredIdx === null
                           ? ""
                           : hoveredIdx === idx
                           ? "opacity-100"
                           : "opacity-40"
                       }`}
-                      onMouseEnter={() => setHoveredIdx(idx)}
-                      onMouseLeave={() => setHoveredIdx(null)}
                       onClick={linkMenuClose}
                     >
                       {link.title}
@@ -50,12 +165,24 @@ const Navbar = forwardRef(({ linkMenuClose }, ref) => {
           </nav>
         </div>
         {/* Photo Section - hidden on mobile */}
-        <div className="hidden md:flex justify-center items-center w-full md:w-1/2 h-1/2 md:h-full bg-white">
-          <img
-            src="/can1.webp"
-            alt="Profile"
-            className="object-cover w-full h-full"
-          />
+        <div className="hidden md:flex justify-center items-center w-full md:w-1/2 h-1/2 md:h-full bg-white relative overflow-hidden">
+          <div ref={pillRef} className="w-full h-full relative">
+            <img
+              ref={defaultRef}
+              src={defaultImg}
+              alt="default"
+              className="object-cover w-full h-full absolute top-0 left-0"
+            />
+            {NavImage.map((img) => (
+              <img
+                key={img.key}
+                ref={(el) => (imgRefs.current[img.key] = el)}
+                src={img.url}
+                alt={img.class}
+                className="object-cover w-full h-full absolute top-0 left-0"
+              />
+            ))}
+          </div>
         </div>
       </div>
     </div>

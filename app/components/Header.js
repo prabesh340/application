@@ -4,7 +4,7 @@ import { gsap } from "gsap";
 import { useGSAP } from "@gsap/react";
 import Navbar from "./Navbar";
 import { Squeeze as Hamburger } from "hamburger-react";
-import MagnetEffect from "./MagnetEffect";
+import MagnetEffect from "./gsap/MagnetEffect";
 
 gsap.registerPlugin(useGSAP);
 
