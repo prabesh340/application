@@ -24,12 +24,12 @@ const navLinks = [
 
 const NavImage = [
 	{url:'can1.webp',key:'home',class:"img_home"},
-	{url:'can1.webp',key:'about',class:"img_about"},
+	{url:'can.webp',key:'about',class:"img_about"},
 	{url:'can1.webp',key:'work',class:"img_work"},
 	{url:'can1.webp',key:'contact',class:"img_contact"},
 ]
 
-const defaultImg = "can.webp";
+const defaultImg = "group.webp";
 
 
 
