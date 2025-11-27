@@ -1,16 +1,11 @@
 "use client";
 import React, { forwardRef, useState, useRef } from "react";
-import { Antonio } from "next/font/google";
 import { navLinks, NavImage, defaultImg } from "@/constants";
 import Link from "next/link";
 import { gsap } from "gsap";
 import { useGSAP } from "@gsap/react";
-
+import { antonio } from "../(index)/layout";
 gsap.registerPlugin(useGSAP);
-const antonio = Antonio({
-  subsets: ["latin"],
-  weight: ["100", "300", "400", "500", "600", "700"],
-});
 
 const Navbar = forwardRef(({ linkMenuClose }, ref) => {
   const [hoveredIdx, setHoveredIdx] = useState(null);
@@ -20,7 +15,8 @@ const Navbar = forwardRef(({ linkMenuClose }, ref) => {
   const currentImageIdRef = useRef(0);
   const navContainerRef = useRef(null);
 
-  const isDesktop = () => typeof window !== 'undefined' && window.innerWidth >= 768;
+  const isDesktop = () =>
+    typeof window !== "undefined" && window.innerWidth >= 768;
 
   useGSAP(() => {
     if (!isDesktop()) return;
@@ -35,8 +31,6 @@ const Navbar = forwardRef(({ linkMenuClose }, ref) => {
     if (!isDesktop()) return;
     const targetImageId = linkIndex + 1;
     const rotationValue = 0;
-
-
 
     // Hide default image
     gsap.set(defaultRef.current, {
@@ -95,18 +89,18 @@ const Navbar = forwardRef(({ linkMenuClose }, ref) => {
 
   const handleNavMouseMove = (e) => {
     if (!isDesktop()) return;
-    const target = e.target.closest('a');
+    const target = e.target.closest("a");
     if (target && target.id) {
       const rect = target.getBoundingClientRect();
       const mouseY = e.clientY;
       const linkCenter = rect.top + rect.height / 2;
       const threshold = rect.height * 0.3; // 30% from center
-      
+
       // Only trigger if mouse is within center 60% of the link (30% on each side)
       const distanceFromCenter = Math.abs(mouseY - linkCenter);
-      
+
       if (distanceFromCenter <= threshold) {
-        const linkIndex = navLinks.findIndex(link => link.id === target.id);
+        const linkIndex = navLinks.findIndex((link) => link.id === target.id);
         if (linkIndex !== -1 && hoveredIdx !== linkIndex) {
           setHoveredIdx(linkIndex);
           showImage(target.id, linkIndex);
@@ -132,7 +126,7 @@ const Navbar = forwardRef(({ linkMenuClose }, ref) => {
       <div className="flex flex-col md:flex-row h-full">
         {/* Navigation Links Section */}
         <div className="flex flex-col justify-center items-center w-full md:w-1/2 h-1/2 md:h-full">
-          <nav 
+          <nav
             ref={navContainerRef}
             className="text-center w-full"
             onMouseMove={handleNavMouseMove}

@@ -1,18 +1,22 @@
 "use client";
 import Image from "next/image";
-import React, { use, useRef } from "react";
+import React, { forwardRef, use, useImperativeHandle, useRef } from "react";
 import { Anton } from "next/font/google";
 import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
 import { fruits } from "@/constants";
 import { ChevronLeft, ChevronRight } from "lucide-react";
+gsap.registerPlugin(useGSAP);
 
 const anton = Anton({
   subsets: ["latin"],
   weight: "400",
 });
-const Hero = () => {
+
+const Hero = forwardRef((props, ref) => {
   const hero = useRef(null);
+  useImperativeHandle(ref, () => hero.current);
+
   const [step, setStep] = React.useState(0);
   const timelineRef = useRef(null);
 
@@ -95,7 +99,10 @@ const Hero = () => {
   };
 
   return (
-    <div className="h-screen w-full overflow-hidden relative" ref={hero}>
+    <div
+      className="h-screen w-full overflow-hidden relative sm:sticky top-0 z-6 bg-white "
+      ref={hero}
+    >
       <div className="svg_curve absolute bottom-0 left-0 w-full -z-1">
         <svg
           className="svg1"
@@ -190,6 +197,6 @@ const Hero = () => {
       </div>
     </div>
   );
-};
+});
 
 export default Hero;
