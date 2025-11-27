@@ -22,15 +22,33 @@ const navLinks = [
  },
 ]; 
 
+
 const NavImage = [
-	{url:'can1.webp',key:'home',class:"img_home"},
-	{url:'can.webp',key:'about',class:"img_about"},
-	{url:'can1.webp',key:'work',class:"img_work"},
-	{url:'can1.webp',key:'contact',class:"img_contact"},
+	{url:'/can_res/can1.webp',key:'home',class:"img_home"},
+	{url:'/can/can2.webp',key:'about',class:"img_about"},
+	{url:'/can/can3.webp',key:'work',class:"img_work"},
+	{url:'/can/can.webp',key:'contact',class:"img_contact"},
 ]
 
-const defaultImg = "group.webp";
-
+const defaultImg = "/can_res/group.webp";
+export const cans = [
+  {
+    id: 1,
+    name: "lime",
+    imgUrl: "/can/can.webp"
+  },
+  {
+    id: 2,
+    name: "orange",
+    imgUrl: "/can/can2.webp"
+  },
+  {
+    id: 3,
+    name: "strawberry",
+    imgUrl: "/can/can3.webp"
+  }
+];
+const fruits = ["lime", "orange", "strawberry"];
 
 
 
@@ -38,5 +56,6 @@ const defaultImg = "group.webp";
 export{
     navLinks,
 	NavImage,
-	defaultImg
+	defaultImg,
+  fruits
 }

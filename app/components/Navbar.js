@@ -20,7 +20,10 @@ const Navbar = forwardRef(({ linkMenuClose }, ref) => {
   const currentImageIdRef = useRef(0);
   const navContainerRef = useRef(null);
 
+  const isDesktop = () => typeof window !== 'undefined' && window.innerWidth >= 768;
+
   useGSAP(() => {
+    if (!isDesktop()) return;
     // Set initial state - default visible, all nav images hidden
     gsap.set(defaultRef.current, { zIndex: 10, opacity: 1 });
     NavImage.forEach((img) => {
@@ -29,19 +32,11 @@ const Navbar = forwardRef(({ linkMenuClose }, ref) => {
   });
 
   const showImage = (linkId, linkIndex) => {
+    if (!isDesktop()) return;
     const targetImageId = linkIndex + 1;
     const rotationValue = 0;
 
-    // Rotate the pill container
-    gsap.to(pillRef.current, {
-      rotation: rotationValue,
-      duration: 0.4,
-      onComplete: function () {
-        gsap.set(pillRef.current, {
-          rotation: 0,
-        });
-      },
-    });
+
 
     // Hide default image
     gsap.set(defaultRef.current, {
@@ -67,6 +62,7 @@ const Navbar = forwardRef(({ linkMenuClose }, ref) => {
   };
 
   const showDefaultImage = () => {
+    if (!isDesktop()) return;
     const rotationValue = 0;
 
     // Rotate the pill container
@@ -98,6 +94,7 @@ const Navbar = forwardRef(({ linkMenuClose }, ref) => {
   };
 
   const handleNavMouseMove = (e) => {
+    if (!isDesktop()) return;
     const target = e.target.closest('a');
     if (target && target.id) {
       const rect = target.getBoundingClientRect();
@@ -119,6 +116,7 @@ const Navbar = forwardRef(({ linkMenuClose }, ref) => {
   };
 
   const handleNavMouseLeave = () => {
+    if (!isDesktop()) return;
     setHoveredIdx(null);
     showDefaultImage();
   };
