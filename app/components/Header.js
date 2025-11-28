@@ -41,7 +41,10 @@ const Header = () => {
     <>
       <div className="fixed w-full py-2 justify-between items-center flex px-4 sm:px-10 z-50">
         <MagnetEffect>
-          <div className="part-1 cursor-pointer" onClick={linkMenuClose}>
+          <div
+            className="part-1 cursor-pointer relative "
+            onClick={linkMenuClose}
+          >
             <img src="/LEXI.png" alt="logo" className="h-14 sm:h-20 " />
           </div>
         </MagnetEffect>
