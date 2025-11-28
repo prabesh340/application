@@ -1,0 +1,19 @@
+
+.loader{
+  height: calc(100vh + 200px);
+  width: 100%;
+  position: fixed;
+  z-index: 10000;
+  background-color: #B5C389;
+}
+
+.loader svg{
+  height: 100%;
+  width: 100%;
+}
+
+.loader svg path{
+  fill:  #B5C389;
+  stroke-width: 1px;
+}
+
