@@ -5,6 +5,7 @@ import { useGSAP } from "@gsap/react";
 import Navbar from "./Navbar";
 import { Squeeze as Hamburger } from "hamburger-react";
 import MagnetEffect from "./gsap/MagnetEffect";
+import { useRouter } from "next/navigation";
 gsap.registerPlugin(useGSAP);
 
 const Header = () => {
@@ -36,6 +37,12 @@ const Header = () => {
     setIsMenuOpen(false);
     timelineRef.current.reverse();
   };
+  const router = useRouter();
+
+  const goHome = () => {
+    console.log("doing something...");
+    router.push("/");
+  };
 
   return (
     <>
@@ -43,7 +50,10 @@ const Header = () => {
         <MagnetEffect>
           <div
             className="part-1 cursor-pointer relative "
-            onClick={linkMenuClose}
+            onClick={() => {
+              linkMenuClose();
+              goHome();
+            }}
           >
             <img src="/LEXI.png" alt="logo" className="h-14 sm:h-20 " />
           </div>
