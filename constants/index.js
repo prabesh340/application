@@ -11,9 +11,9 @@ const navLinks = [
 
  },
  {
-	id: "work",
-	title: "The Art",
-    href:"#"
+	id: "gallery",
+	title: "Gallery",
+    href:"/gallery"
  },
  {
 	id: "contact",
@@ -24,10 +24,10 @@ const navLinks = [
 
 
 const NavImage = [
-	{url:'/can_res/can1.webp',key:'home',class:"img_home"},
-	{url:'/can/can2.webp',key:'about',class:"img_about"},
-	{url:'/can/can3.webp',key:'work',class:"img_work"},
-	{url:'/can/can.webp',key:'contact',class:"img_contact"},
+	{url:'/can/can.webp',key:'home',class:"img_home"},
+	{url:'/images/7.webp',key:'about',class:"img_about"},
+	{url:'/images/1.webp',key:'gallery',class:"img_gallery"},
+	{url:'/images/5.webp',key:'contact',class:"img_contact"},
 ]
 
 const defaultImg = "/can_res/group.webp";
