@@ -35,17 +35,20 @@ export const cans = [
   {
     id: 1,
     name: "lime",
-    imgUrl: "/can/can.webp"
+    imgUrl: "/can/can.webp",
+    color:"lime"
   },
   {
     id: 2,
     name: "orange",
-    imgUrl: "/can/can2.webp"
+    imgUrl: "/can/can2.webp",
+    color:"orange"
   },
   {
     id: 3,
     name: "strawberry",
-    imgUrl: "/can/can3.webp"
+    imgUrl: "/can/can3.webp",
+    color:"red"
   }
 ];
 const fruits = ["lime", "orange", "strawberry"];

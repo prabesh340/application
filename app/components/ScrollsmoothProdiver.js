@@ -16,7 +16,7 @@ export function SmoothScrollProvider() {
     const lenis = new Lenis({
     //   smoothWheel: true,
         syncTouch: true,
-      duration: 1.2, // Reduced from 1.4 for better performance
+      duration: 1.7, // Reduced from 1.4 for better performance
       wheelMultiplier: 1, // Adjust scroll speed
       touchMultiplier: 2,
     });
