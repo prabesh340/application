@@ -41,7 +41,6 @@ const page = () => {
         </div>
       </section>
       <ImageSequence/>
-      <Fottor/>
     </div>
   )
 }

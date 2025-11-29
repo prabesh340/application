@@ -11,7 +11,6 @@ const page = () => {
       <Sidewayscroll />
       <Findus />
       {/* <ImageSequence /> */}
-      <Fottor />
     </>
   );
 };
