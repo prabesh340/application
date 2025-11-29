@@ -18,7 +18,7 @@ const navLinks = [
  {
 	id: "contact",
 	title: "Contact",
-    href:"#"
+    href:"/contact"
  },
 ]; 
 
