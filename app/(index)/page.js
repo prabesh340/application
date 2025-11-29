@@ -1,4 +1,5 @@
 import Findus from "../components/Findus";
+import Fottor from "../components/Fottor";
 import HeroEffect from "../components/HeroEffect";
 import ImageSequence from "../components/ImageSequence";
 import { SmoothScrollProvider } from "../components/ScrollsmoothProdiver";
@@ -11,7 +12,8 @@ const page = () => {
       <HeroEffect />
       <Sidewayscroll />
       <Findus />
-    {/* <ImageSequence /> */}
+      {/* <ImageSequence /> */}
+      <Fottor />
     </>
   );
 };
