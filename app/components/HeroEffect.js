@@ -33,14 +33,7 @@ const HeroEffect = () => {
       },
       "same"
     );
-    tl.from(
-      textapper.current,
-      {
-        scale: 0.8,
-        rotate: -5,
-      },
-      "same"
-    );
+   
   }, [container.current]);
   return (
     <div  ref={container} className="box relative h-[200vh] z-5 bg-[#222123]">

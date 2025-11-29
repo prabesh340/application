@@ -37,7 +37,7 @@ const TextApper = forwardRef((props, ref) => {
         scrollTrigger: {
           trigger: textapper.current,
           start: "30% center",
-          // markers: true,
+          toggleActions: "play none none reverse",
         },
       });
       texttl
