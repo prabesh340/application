@@ -1,15 +1,17 @@
+import Findus from "../components/Findus";
 import HeroEffect from "../components/HeroEffect";
+import ImageSequence from "../components/ImageSequence";
 import { SmoothScrollProvider } from "../components/ScrollsmoothProdiver";
 import Sidewayscroll from "../components/Sidewayscroll";
 
 const page = () => {
- 
   return (
     <>
-      <SmoothScrollProvider/>
+      <SmoothScrollProvider />
       <HeroEffect />
       <Sidewayscroll />
-      <div className="h-screen w-full bg-amber-600"></div>
+      <Findus />
+    {/* <ImageSequence /> */}
     </>
   );
 };
