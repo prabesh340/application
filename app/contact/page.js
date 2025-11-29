@@ -99,7 +99,6 @@ const page = () => {
           </div>
         </div>
       </section>
-      <Fottor/>
     </main>
   );
 }

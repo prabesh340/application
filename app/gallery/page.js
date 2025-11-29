@@ -116,7 +116,6 @@ export default function Home() {
           </p>
         </div>
       </div>
-      <Fottor />
     </main>
   );
 }
