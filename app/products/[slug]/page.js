@@ -52,7 +52,7 @@ const ProductPage = () => {
         buttonOutline: "border-red-200 hover:bg-red-400",
       },
       "red+orange+lime": {
-        bg: "white",
+        bg: "bg-white",
         text: "text-black",
         textSecondary: "text-gray-800",
         textTertiary: "text-gray-700",
@@ -98,10 +98,10 @@ const ProductPage = () => {
   }
 
   return (
-    <div className={`min-h-screen  ${antonio.className} `}  >
+    <div className={`min-h-screen  ${antonio.className} bg-[#dff3e3]`}  >
       <div className="w-full grid grid-cols-1 lg:grid-cols-2 ">
         {/* Left: Image section */}
-        <div className="relative h-[55vh] lg:h-screen bg-zinc-900">
+        <div className="relative h-[55vh] lg:h-screen ">
           <img
             src={product.imgUrl}
             alt={product.name}
