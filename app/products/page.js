@@ -10,7 +10,7 @@ const ProductsPage = () => {
   return (
     <div className={`min-h-screen bg-white ${antonio.className}`}>
       {/* Hero Section */}
-      <div className="bg-gray-900 text-white py-20 px-8">
+      <div className="bg-[#222123] text-white py-20 px-8">
         <div className="max-w-7xl mx-auto">
           <h1 className="text-7xl lg:text-9xl font-bold uppercase mb-4">
             All Flavors
