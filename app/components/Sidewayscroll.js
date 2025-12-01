@@ -16,7 +16,7 @@ const tl = gsap.timeline({
     trigger: SideContainer.current,
     start: "top 0%",
     end: "top -250%",
-    scrub: 1,
+    scrub: 0.3,
     pin: true,
   },
 });
