@@ -5,7 +5,7 @@ import { cans1, shippingConfig } from "../../../constants";
 import { Antonio } from "next/font/google";
 import Link from "next/link";
 import { useCart } from "../../../contexts/CartContext";
-import toast, { Toaster } from 'react-hot-toast';
+import toast, { Toaster } from "react-hot-toast";
 
 const antonio = Antonio({ subsets: ["latin"], weight: ["400", "700"] });
 
@@ -13,11 +13,11 @@ const ProductPage = () => {
   const params = useParams();
   const { slug } = params;
   const [quantity, setQuantity] = useState(1);
-  const { addToCart, cartItems } = useCart();
+  const { addToCart, openCart, cartItems } = useCart();
 
   const product = cans1.find((can) => can.name === slug);
   const maxQty = product?.maxQuantity || shippingConfig.maxQuantity;
-  
+
   // Dynamic color mapping based on product color
   const getColorClasses = (color) => {
     const colorMap = {
@@ -87,25 +87,25 @@ const ProductPage = () => {
 
   const handleAddToCart = () => {
     if (product) {
-      const existingItem = cartItems.find(item => item.id === product.id);
-      
-      if (existingItem && (existingItem.quantity + quantity) > maxQty) {
+      const existingItem = cartItems.find((item) => item.id === product.id);
+
+      if (existingItem && existingItem.quantity + quantity > maxQty) {
         toast.error(`Maximum ${maxQty} items allowed for ${product.name}`, {
           duration: 3000,
-          position: 'bottom-center',
+          position: "bottom-center",
           style: {
-            background: '#ef4444',
-            color: '#fff',
-            fontWeight: 'bold',
+            background: "#ef4444",
+            color: "#fff",
+            fontWeight: "bold",
           },
         });
         return;
       }
-      
+
       addToCart(product, quantity);
       toast.success(`Added ${quantity} ${product.name} to cart`, {
         duration: 2000,
-        position: 'bottom-center',
+        position: "bottom-center",
       });
     }
   };
@@ -121,7 +121,7 @@ const ProductPage = () => {
   }
 
   return (
-    <div className={`min-h-screen  ${antonio.className} bg-[#dff3e3]`}  >
+    <div className={`min-h-screen  ${antonio.className} bg-[#dff3e3]`}>
       <Toaster />
       <div className="w-full grid grid-cols-1 lg:grid-cols-2 ">
         {/* Left: Image section */}
@@ -236,11 +236,16 @@ const ProductPage = () => {
 
           {/* Add to cart */}
           <button
-            onClick={handleAddToCart}
+            onClick={() => {
+              handleAddToCart();
+              openCart();
+            }}
             className={`w-full ${colors.button} text-white h-16 text-base font-bold uppercase tracking-wider transition-colors`}
           >
             Add to Cart — Rs
-            {(parseFloat(product.discounted_cost.replace('Rs ', '')) * quantity).toFixed(0)}
+            {(
+              parseFloat(product.discounted_cost.replace("Rs ", "")) * quantity
+            ).toFixed(0)}
           </button>
 
           {/* Get All Flavors button - only show if not already on all-taste product */}
