@@ -471,7 +471,7 @@ const CheckoutForm = () => {
             <div className="space-y-4 mb-6 max-h-60 overflow-y-auto">
               {cartItems.map((item) => (
                 <div key={item.id} className="flex gap-4 bg-white rounded-lg p-3 border border-gray-200">
-                  <div className="w-16 h-16 bg-gray-100 rounded-md flex-shrink-0 overflow-hidden">
+                  <div className="w-16 h-16 bg-gray-100 rounded-md shrink-0 overflow-hidden">
                     <img 
                       src={item.imgUrl} 
                       alt={item.name} 
