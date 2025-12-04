@@ -5,6 +5,7 @@ import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
 import { useCart } from "../../contexts/CartContext";
 import { useRouter } from "next/navigation";
+import { shippingConfig } from "../../constants";
 
 const Floatingcart = () => {
     const bgRef = useRef(null);
@@ -44,11 +45,11 @@ const Floatingcart = () => {
     };
 
     const subtotal = cartItems.reduce((sum, item) => {
-        const price = parseFloat(item.discounted_cost.replace('$', ''));
+        const price = parseFloat(item.discounted_cost.replace('Rs ', ''));
         return sum + (price * item.quantity);
     }, 0);
-    const tax = subtotal * 0.08;
-    const shipping = subtotal > 50 ? 0 : 4.99;
+    const tax = subtotal * shippingConfig.taxRate;
+    const shipping = subtotal > shippingConfig.freeShippingThreshold ? 0 : shippingConfig.shippingCost;
     const total = subtotal + tax + shipping;
 
     const itemCount = getItemCount();
@@ -137,7 +138,8 @@ const Floatingcart = () => {
                                                                     </span>
                                                                     <button
                                                                         onClick={() => updateQuantity(item.id, 1)}
-                                                                        className="p-1 hover:bg-white rounded transition-colors"
+                                                                        disabled={item.quantity >= (item.maxQuantity || shippingConfig.maxQuantity)}
+                                                                        className="p-1 hover:bg-white rounded transition-colors disabled:opacity-30 disabled:cursor-not-allowed disabled:hover:bg-transparent"
                                                                     >
                                                                         <Plus size={16} />
                                                                     </button>
@@ -145,11 +147,11 @@ const Floatingcart = () => {
                                                                 
                                                                 <div className="text-right">
                                                                     <p className="text-lg sm:text-xl font-bold">
-                                                                        ${(parseFloat(item.discounted_cost.replace('$', '')) * item.quantity).toFixed(2)}
+                                                                        Rs {(parseFloat(item.discounted_cost.replace('Rs ', '')) * item.quantity).toFixed(0)}
                                                                     </p>
                                                                     {item.quantity > 1 && (
                                                                         <p className="text-xs text-gray-500">
-                                                                            ${parseFloat(item.discounted_cost.replace('$', '')).toFixed(2)} each
+                                                                            Rs {parseFloat(item.discounted_cost.replace('Rs ', '')).toFixed(0)} each
                                                                         </p>
                                                                     )}
                                                                 </div>
@@ -168,11 +170,11 @@ const Floatingcart = () => {
                                                 <div className="space-y-3">
                                                     <div className="flex justify-between text-sm text-gray-600">
                                                         <span>Subtotal</span>
-                                                        <span className="font-medium text-gray-900">${subtotal.toFixed(2)}</span>
+                                                        <span className="font-medium text-gray-900">Rs {subtotal.toFixed(0)}</span>
                                                     </div>
                                                     <div className="flex justify-between text-sm text-gray-600">
-                                                        <span>Tax (8%)</span>
-                                                        <span className="font-medium text-gray-900">${tax.toFixed(2)}</span>
+                                                        <span>Tax (13%)</span>
+                                                        <span className="font-medium text-gray-900">Rs {tax.toFixed(0)}</span>
                                                     </div>
                                                     <div className="flex justify-between text-sm text-gray-600">
                                                         <span>Shipping</span>
@@ -180,16 +182,16 @@ const Floatingcart = () => {
                                                             {shipping === 0 ? (
                                                                 <span className="text-green-600 font-semibold">FREE</span>
                                                             ) : (
-                                                                <span className="text-gray-900">${shipping.toFixed(2)}</span>
+                                                                <span className="text-gray-900">Rs {shipping.toFixed(0)}</span>
                                                             )}
                                                         </span>
                                                     </div>
                                                 </div>
 
-                                                {shipping > 0 && subtotal < 50 && (
+                                                {shipping > 0 && subtotal < shippingConfig.freeShippingThreshold && (
                                                     <div className="bg-blue-50 border border-blue-200 rounded-lg p-3">
                                                         <p className="text-xs text-blue-800">
-                                                            Add <span className="font-semibold">${(50 - subtotal).toFixed(2)}</span> more for free shipping!
+                                                            Add <span className="font-semibold">Rs {(shippingConfig.freeShippingThreshold - subtotal).toFixed(0)}</span> more for free shipping!
                                                         </p>
                                                     </div>
                                                 )}
@@ -197,10 +199,14 @@ const Floatingcart = () => {
                                                 <div className="pt-4 border-t border-gray-300">
                                                     <div className="flex justify-between items-center mb-6">
                                                         <span className="text-lg font-semibold">Total</span>
-                                                        <span className="text-2xl font-bold">${total.toFixed(2)}</span>
+                                                        <span className="text-2xl font-bold">Rs {total.toFixed(0)}</span>
                                                     </div>
                                                     
                                                     <button
+                                                        onClick={() => {
+                                                            router.push('/checkout');
+                                                            handleClick();
+                                                        }}
                                                         disabled={cartItems.length === 0}
                                                         className="w-full bg-black text-white py-3.5 rounded-full font-semibold hover:bg-gray-800 active:scale-95 transition-all disabled:bg-gray-300 disabled:cursor-not-allowed flex items-center justify-center gap-2 group shadow-lg"
                                                     >

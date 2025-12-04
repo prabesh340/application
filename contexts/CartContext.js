@@ -1,5 +1,6 @@
 "use client";
 import React, { createContext, useContext, useState, useEffect } from 'react';
+import { shippingConfig } from '../constants';
 
 const CartContext = createContext();
 
@@ -35,16 +36,17 @@ export const CartProvider = ({ children }) => {
     const addToCart = (product, quantity = 1) => {
         setCartItems((prevItems) => {
             const existingItem = prevItems.find((item) => item.id === product.id);
+            const maxQty = product.maxQuantity || shippingConfig.maxQuantity;
             
             if (existingItem) {
                 return prevItems.map((item) =>
                     item.id === product.id
-                        ? { ...item, quantity: Math.min(10, item.quantity + quantity) }
+                        ? { ...item, quantity: Math.min(maxQty, item.quantity + quantity) }
                         : item
                 );
             }
             
-            return [...prevItems, { ...product, quantity: Math.min(10, quantity) }];
+            return [...prevItems, { ...product, quantity: Math.min(maxQty, quantity) }];
         });
     };
 
@@ -58,11 +60,12 @@ export const CartProvider = ({ children }) => {
                 .map((item) => {
                     if (item.id === productId) {
                         const newQuantity = item.quantity + delta;
+                        const maxQty = item.maxQuantity || shippingConfig.maxQuantity;
                         // Remove item if quantity would be 0 or less
                         if (newQuantity <= 0) {
                             return null;
                         }
-                        return { ...item, quantity: Math.min(10, newQuantity) };
+                        return { ...item, quantity: Math.min(maxQty, newQuantity) };
                     }
                     return item;
                 })
@@ -96,7 +99,7 @@ export const CartProvider = ({ children }) => {
 
     const getSubtotal = () => {
         return cartItems.reduce((total, item) => {
-            const price = parseFloat(item.discounted_cost.replace('$', ''));
+            const price = parseFloat(item.discounted_cost.replace('Rs ', ''));
             return total + (price * item.quantity);
         }, 0);
     };
