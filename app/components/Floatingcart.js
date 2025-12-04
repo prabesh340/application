@@ -67,7 +67,7 @@ const Floatingcart = () => {
                         <div className="flex-1 overflow-y-auto">
                             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8">
                                 {cartItems.length === 0 ? (
-                                    <div className="flex flex-col items-center justify-center min-h-[60vh] py-12">
+                                    <div className="flex flex-col items-center justify-center min-h-[60vh] lg:min-h-[80vh] py-12">
                                         <div className="w-24 h-24 sm:w-32 sm:h-32 bg-gray-100 rounded-full flex items-center justify-center mb-4 sm:mb-6">
                                             <ShoppingCart size={48} className="text-gray-400" />
                                         </div>
@@ -126,7 +126,11 @@ const Floatingcart = () => {
                                                                         onClick={() => updateQuantity(item.id, -1)}
                                                                         className="p-1 hover:bg-white rounded transition-colors"
                                                                     >
-                                                                        <Minus size={16} />
+                                                                        {item.quantity === 1 ? (
+                                                                            <Trash2 size={16} className="text-red-500" />
+                                                                        ) : (
+                                                                            <Minus size={16} />
+                                                                        )}
                                                                     </button>
                                                                     <span className="w-8 text-center text-sm font-semibold">
                                                                         {item.quantity}

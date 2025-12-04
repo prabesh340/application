@@ -53,13 +53,21 @@ export const CartProvider = ({ children }) => {
     };
 
     const updateQuantity = (productId, delta) => {
-        setCartItems((prevItems) =>
-            prevItems.map((item) =>
-                item.id === productId
-                    ? { ...item, quantity: Math.max(1, Math.min(10, item.quantity + delta)) }
-                    : item
-            )
-        );
+        setCartItems((prevItems) => {
+            return prevItems
+                .map((item) => {
+                    if (item.id === productId) {
+                        const newQuantity = item.quantity + delta;
+                        // Remove item if quantity would be 0 or less
+                        if (newQuantity <= 0) {
+                            return null;
+                        }
+                        return { ...item, quantity: Math.min(10, newQuantity) };
+                    }
+                    return item;
+                })
+                .filter(item => item !== null);
+        });
     };
 
     const clearCart = () => {
