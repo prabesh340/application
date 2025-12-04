@@ -1,39 +1,47 @@
-"use client"
-import React from 'react';
-import Link from 'next/link';
-import { cans1 } from '../../constants';
+"use client";
+import React from "react";
+import Link from "next/link";
+import { cans1 } from "../../constants";
 import { Antonio } from "next/font/google";
-import { useCart } from '../../contexts/CartContext';
-import toast, { Toaster } from 'react-hot-toast';
+import { useCart } from "../../contexts/CartContext";
+import toast, { Toaster } from "react-hot-toast";
 
 const antonio = Antonio({ subsets: ["latin"], weight: ["400", "700"] });
 
 const ProductsPage = () => {
-  const { addToCart, openCart, cartItems } = useCart();
+  const { addToCart, cartItems } = useCart();
 
   const handleQuickAdd = (product, e) => {
     e.preventDefault();
     e.stopPropagation();
-    
+
     // Check if product already exists in cart
-    const existingItem = cartItems.find(item => item.id === product.id);
+    const existingItem = cartItems.find((item) => item.id === product.id);
     const maxQty = product.maxQuantity || 10;
-    
+
     if (existingItem && existingItem.quantity >= maxQty) {
       toast.error(`Maximum ${maxQty} items allowed for ${product.name}`, {
         duration: 3000,
-        position: 'bottom-center',
+        position: "bottom-center",
         style: {
-          background: '#ef4444',
-          color: '#fff',
-          fontWeight: 'bold',
+          background: "#ef4444",
+          color: "#fff",
+          fontWeight: "bold",
         },
       });
       return;
     }
-    
+
     addToCart(product, 1);
-    openCart();
+    toast.success(`${product.name} added to cart!`, {
+      duration: 2000,
+      position: "bottom-center",
+      style: {
+        background: "#10b981",
+        color: "#fff",
+        fontWeight: "bold",
+      },
+    });
   };
 
   return (
@@ -55,27 +63,25 @@ const ProductsPage = () => {
       <div className="max-w-7xl mx-auto px-8 py-16">
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
           {cans1.map((product) => (
-            <Link 
-              key={product.name} 
+            <Link
+              key={product.name}
               href={`/products/${product.name}`}
               className="group"
             >
               <div className="bg-zinc-900 aspect-square relative overflow-hidden">
-                <img 
-                  src={product.imgUrl} 
+                <img
+                  src={product.imgUrl}
                   alt={product.name}
                   className="absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
                 />
               </div>
-              
+
               <div className="mt-6 space-y-3">
                 <h2 className="text-3xl font-bold uppercase text-black group-hover:text-gray-600 transition-colors">
                   {product.name}
                 </h2>
-                <p className="text-lg text-gray-600">
-                  {product.color}
-                </p>
-                
+                <p className="text-lg text-gray-600">{product.color}</p>
+
                 <div className="flex items-baseline gap-3 pt-2">
                   <span className="text-3xl font-bold text-black">
                     {product.discounted_cost}
@@ -84,7 +90,7 @@ const ProductsPage = () => {
                     {product.original_cost}
                   </span>
                 </div>
-                
+
                 <button
                   onClick={(e) => handleQuickAdd(product, e)}
                   className="mt-4 w-full bg-black text-white py-3 px-6 font-medium uppercase text-sm hover:bg-gray-800 transition-colors opacity-0 group-hover:opacity-100"
@@ -96,8 +102,6 @@ const ProductsPage = () => {
           ))}
         </div>
       </div>
-
-      
     </div>
   );
 };
