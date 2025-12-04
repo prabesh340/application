@@ -4,6 +4,7 @@ import { useParams } from "next/navigation";
 import { cans1 } from "../../../constants";
 import { Antonio } from "next/font/google";
 import Link from "next/link";
+import { useCart } from "../../../contexts/CartContext";
 
 const antonio = Antonio({ subsets: ["latin"], weight: ["400", "700"] });
 
@@ -11,6 +12,7 @@ const ProductPage = () => {
   const params = useParams();
   const { slug } = params;
   const [quantity, setQuantity] = useState(1);
+  const { addToCart, openCart } = useCart();
 
   const product = cans1.find((can) => can.name === slug);
   
@@ -83,7 +85,8 @@ const ProductPage = () => {
 
   const handleAddToCart = () => {
     if (product) {
-      alert(`Added ${quantity} of ${product.name} to cart!`);
+      addToCart(product, quantity);
+      openCart();
     }
   };
 

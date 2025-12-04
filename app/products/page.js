@@ -3,10 +3,20 @@ import React from 'react';
 import Link from 'next/link';
 import { cans1 } from '../../constants';
 import { Antonio } from "next/font/google";
+import { useCart } from '../../contexts/CartContext';
 
 const antonio = Antonio({ subsets: ["latin"], weight: ["400", "700"] });
 
 const ProductsPage = () => {
+  const { addToCart, openCart } = useCart();
+
+  const handleQuickAdd = (product, e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    addToCart(product, 1);
+    openCart();
+  };
+
   return (
     <div className={`min-h-screen bg-white ${antonio.className}`}>
       {/* Hero Section */}
@@ -54,6 +64,13 @@ const ProductsPage = () => {
                     {product.original_cost}
                   </span>
                 </div>
+                
+                <button
+                  onClick={(e) => handleQuickAdd(product, e)}
+                  className="mt-4 w-full bg-black text-white py-3 px-6 font-medium uppercase text-sm hover:bg-gray-800 transition-colors opacity-0 group-hover:opacity-100"
+                >
+                  Quick Add to Cart
+                </button>
               </div>
             </Link>
           ))}
