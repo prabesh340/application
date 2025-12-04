@@ -48,6 +48,7 @@ export const cans = [
     imgUrl: "/can/can3.webp",
     color: "red",
   },
+ 
 ];
 const fruits = ["lime", "orange", "strawberry"];
 
@@ -57,33 +58,44 @@ export const cans1 = [
     name: "lime",
     imgUrl: "/images/6.webp",
     color: "lime",
-    original_cost: "$6.99",
-    discounted_cost: "$4.99",
+    original_cost: "Rs 500",
+    discounted_cost: "Rs 250",
+    maxQuantity: 10,
   },
   {
     id: 2,
     name: "orange",
     imgUrl: "/images/4.webp",
     color: "orange",
-    original_cost: "$6.99",
-    discounted_cost: "$4.99",
+    original_cost: "Rs 500",
+    discounted_cost: "Rs 250",
+    maxQuantity: 2,
   },
   {
     id: 3,
     name: "strawberry",
     imgUrl: "/images/5.webp",
     color: "red",
-    original_cost: "$6.99",
-    discounted_cost: "$4.99",
+    original_cost: "Rs 500",
+    discounted_cost: "Rs 250",
+    maxQuantity: 10,
   },
   {
     id: 4,
     name: "all-taste",
     imgUrl: "/images/7.webp",
     color: "red+orange+lime",
-    original_cost: "$20.99",
-    discounted_cost: "$14.99",
-  },
+    original_cost: "Rs 1000",
+    discounted_cost: "Rs 1500",
+    maxQuantity: 10,
+  }
 ];
+
+// Shipping and Tax Configuration
+export const shippingConfig = {
+  freeShippingThreshold: 500, // Free shipping above Rs 5000
+  shippingCost: 80, // Shipping cost Rs 100
+  taxRate: 0.13, // 13% tax rate
+};
 
 export { navLinks, NavImage, defaultImg, fruits, cans1 };

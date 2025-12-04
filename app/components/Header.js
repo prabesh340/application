@@ -6,12 +6,14 @@ import Navbar from "./Navbar";
 import { Squeeze as Hamburger } from "hamburger-react";
 import MagnetEffect from "./gsap/MagnetEffect";
 import { useRouter } from "next/navigation";
+import { useCart } from "@/contexts/CartContext";
 gsap.registerPlugin(useGSAP);
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const navRef = useRef(null);
   const timelineRef = useRef(null);
+  const { closeCart } = useCart();
 
   useGSAP(() => {
     // Create the timeline but don't start it
@@ -53,6 +55,7 @@ const Header = () => {
             onClick={() => {
               linkMenuClose();
               goHome();
+              closeCart();
             }}
           >
             <img src="/LEXI.png" alt="logo" className="h-14 sm:h-20 " />

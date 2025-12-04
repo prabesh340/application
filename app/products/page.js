@@ -3,12 +3,42 @@ import React from 'react';
 import Link from 'next/link';
 import { cans1 } from '../../constants';
 import { Antonio } from "next/font/google";
+import { useCart } from '../../contexts/CartContext';
+import toast, { Toaster } from 'react-hot-toast';
 
 const antonio = Antonio({ subsets: ["latin"], weight: ["400", "700"] });
 
 const ProductsPage = () => {
+  const { addToCart, openCart, cartItems } = useCart();
+
+  const handleQuickAdd = (product, e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    
+    // Check if product already exists in cart
+    const existingItem = cartItems.find(item => item.id === product.id);
+    const maxQty = product.maxQuantity || 10;
+    
+    if (existingItem && existingItem.quantity >= maxQty) {
+      toast.error(`Maximum ${maxQty} items allowed for ${product.name}`, {
+        duration: 3000,
+        position: 'bottom-center',
+        style: {
+          background: '#ef4444',
+          color: '#fff',
+          fontWeight: 'bold',
+        },
+      });
+      return;
+    }
+    
+    addToCart(product, 1);
+    openCart();
+  };
+
   return (
     <div className={`min-h-screen bg-white ${antonio.className}`}>
+      <Toaster />
       {/* Hero Section */}
       <div className="bg-[#222123] text-white py-20 px-8">
         <div className="max-w-7xl mx-auto">
@@ -54,6 +84,13 @@ const ProductsPage = () => {
                     {product.original_cost}
                   </span>
                 </div>
+                
+                <button
+                  onClick={(e) => handleQuickAdd(product, e)}
+                  className="mt-4 w-full bg-black text-white py-3 px-6 font-medium uppercase text-sm hover:bg-gray-800 transition-colors opacity-0 group-hover:opacity-100"
+                >
+                  Quick Add to Cart
+                </button>
               </div>
             </Link>
           ))}

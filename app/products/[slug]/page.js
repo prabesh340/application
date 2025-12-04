@@ -1,9 +1,11 @@
 "use client";
 import React, { useState } from "react";
 import { useParams } from "next/navigation";
-import { cans1 } from "../../../constants";
+import { cans1, shippingConfig } from "../../../constants";
 import { Antonio } from "next/font/google";
 import Link from "next/link";
+import { useCart } from "../../../contexts/CartContext";
+import toast, { Toaster } from 'react-hot-toast';
 
 const antonio = Antonio({ subsets: ["latin"], weight: ["400", "700"] });
 
@@ -11,8 +13,10 @@ const ProductPage = () => {
   const params = useParams();
   const { slug } = params;
   const [quantity, setQuantity] = useState(1);
+  const { addToCart, cartItems } = useCart();
 
   const product = cans1.find((can) => can.name === slug);
+  const maxQty = product?.maxQuantity || shippingConfig.maxQuantity;
   
   // Dynamic color mapping based on product color
   const getColorClasses = (color) => {
@@ -74,7 +78,7 @@ const ProductPage = () => {
     : getColorClasses("lime");
 
   const handleIncrease = () => {
-    if (quantity < 10) setQuantity(quantity + 1);
+    if (quantity < maxQty) setQuantity(quantity + 1);
   };
 
   const handleDecrease = () => {
@@ -83,7 +87,26 @@ const ProductPage = () => {
 
   const handleAddToCart = () => {
     if (product) {
-      alert(`Added ${quantity} of ${product.name} to cart!`);
+      const existingItem = cartItems.find(item => item.id === product.id);
+      
+      if (existingItem && (existingItem.quantity + quantity) > maxQty) {
+        toast.error(`Maximum ${maxQty} items allowed for ${product.name}`, {
+          duration: 3000,
+          position: 'bottom-center',
+          style: {
+            background: '#ef4444',
+            color: '#fff',
+            fontWeight: 'bold',
+          },
+        });
+        return;
+      }
+      
+      addToCart(product, quantity);
+      toast.success(`Added ${quantity} ${product.name} to cart`, {
+        duration: 2000,
+        position: 'bottom-center',
+      });
     }
   };
 
@@ -99,6 +122,7 @@ const ProductPage = () => {
 
   return (
     <div className={`min-h-screen  ${antonio.className} bg-[#dff3e3]`}  >
+      <Toaster />
       <div className="w-full grid grid-cols-1 lg:grid-cols-2 ">
         {/* Left: Image section */}
         <div className="relative h-[55vh] lg:h-screen ">
@@ -203,7 +227,7 @@ const ProductPage = () => {
               <button
                 onClick={handleIncrease}
                 className={`w-12 h-12 border-2 ${colors.border} ${colors.text} flex items-center justify-center text-xl font-bold ${colors.buttonOutline} hover:text-white disabled:opacity-20 transition-colors`}
-                disabled={quantity === 10}
+                disabled={quantity === maxQty}
               >
                 +
               </button>
@@ -215,10 +239,8 @@ const ProductPage = () => {
             onClick={handleAddToCart}
             className={`w-full ${colors.button} text-white h-16 text-base font-bold uppercase tracking-wider transition-colors`}
           >
-            Add to Cart — $
-            {(parseFloat(product.discounted_cost.slice(1)) * quantity).toFixed(
-              2
-            )}
+            Add to Cart — Rs
+            {(parseFloat(product.discounted_cost.replace('Rs ', '')) * quantity).toFixed(0)}
           </button>
 
           {/* Get All Flavors button - only show if not already on all-taste product */}
@@ -233,7 +255,7 @@ const ProductPage = () => {
 
           {/* Info */}
           <div className={`flex gap-6 text-sm ${colors.textSecondary} pt-4`}>
-            <p>Free shipping over $50</p>
+            <p>Free shipping over Rs {shippingConfig.freeShippingThreshold}</p>
             <p>•</p>
             <p>Same day delivery</p>
           </div>

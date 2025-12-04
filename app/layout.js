@@ -5,6 +5,8 @@ import Navbar from "./components/Navbar";
 import Loader from "./components/loader/Loader";
 import { SmoothScrollProvider } from "./components/ScrollsmoothProdiver";
 import Fottor from "./components/Fottor";
+import Floatingcart from "./components/Floatingcart";
+import { CartProvider } from "../contexts/CartContext";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -27,13 +29,15 @@ export default function RootLayout({ children }) {
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased `}
       >
-        
-        <SmoothScrollProvider />
+        <CartProvider>
+          <SmoothScrollProvider />
 
-        <Loader />
-        <Header />
-        {children}
-        <Fottor/>
+          <Loader />
+          <Floatingcart/>
+          <Header />
+          {children}
+          <Fottor/>
+        </CartProvider>
       </body>
     </html>
   );
