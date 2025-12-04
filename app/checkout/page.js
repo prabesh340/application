@@ -6,21 +6,25 @@ import { useRouter } from 'next/navigation';
 import { ArrowLeft, CreditCard, Lock, AlertCircle, Wallet, Building2 } from 'lucide-react';
 import { useForm } from 'react-hook-form';
 import { shippingConfig } from '../../constants';
+import { ReCaptchaProvider, useReCaptcha } from 'next-recaptcha-v3';
+import toast, { Toaster } from 'react-hot-toast';
 
 const poppins = Poppins({
   subsets: ['latin'],
   weight: ['100', '200', '300', '400', '500', '600', '700', '800', '900'],
 });
 
-const CheckoutPage = () => {
+const CheckoutForm = () => {
   const { cartItems, getSubtotal, clearCart } = useCart();
   const router = useRouter();
+  const { executeRecaptcha } = useReCaptcha();
   const { register, handleSubmit, formState: { errors }, watch } = useForm({
     defaultValues: {
       paymentMethod: 'card'
     }
   });
   const [paymentMethod, setPaymentMethod] = useState('card');
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const subtotal = cartItems.reduce((sum, item) => {
     const price = parseFloat(item.discounted_cost.replace('Rs ', ''));
@@ -30,12 +34,76 @@ const CheckoutPage = () => {
   const shipping = subtotal > shippingConfig.freeShippingThreshold ? 0 : shippingConfig.shippingCost;
   const total = subtotal + tax + shipping;
 
-  const onSubmit = (data) => {
-    // Handle checkout submission here
-    console.log('Checkout data:', data);
-    clearCart();
-    alert('Order placed successfully!');
-    router.push('/products');
+  const onSubmit = async (data) => {
+    setIsSubmitting(true);
+
+    try {
+      // Get reCAPTCHA token (with fallback if not available)
+      let token = 'no-recaptcha';
+      if (executeRecaptcha) {
+        try {
+          token = await executeRecaptcha('checkout');
+        } catch (error) {
+          console.warn('reCAPTCHA error:', error);
+          // Continue without reCAPTCHA if it fails
+        }
+      }
+
+      // Prepare order data
+      const orderData = {
+        contactInfo: {
+          firstName: data.fullName.split(' ')[0] || data.fullName,
+          lastName: data.fullName.split(' ').slice(1).join(' ') || '',
+          email: data.email,
+          phone: data.phone,
+        },
+        shippingAddress: {
+          street: data.address,
+          city: data.city,
+          province: data.state,
+          postalCode: data.zipCode,
+        },
+        paymentInfo: {
+          method: paymentMethod,
+          ...(paymentMethod === 'card' && {
+            cardNumber: data.cardNumber,
+            cardName: data.cardName,
+            expiryDate: data.expiryDate,
+            cvv: data.cvv,
+          }),
+        },
+        items: cartItems,
+      };
+
+      // Send order to API
+      const response = await fetch('/api/send-order', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          orderData,
+          recaptchaToken: token,
+        }),
+      });
+
+      const result = await response.json();
+
+      if (response.ok) {
+        toast.success('Order placed successfully! Check your email for confirmation.');
+        clearCart();
+        setTimeout(() => {
+          router.push('/products');
+        }, 2000);
+      } else {
+        toast.error(result.error || 'Failed to place order. Please try again.');
+      }
+    } catch (error) {
+      console.error('Error submitting order:', error);
+      toast.error('An error occurred. Please try again.');
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   // Custom validation error component
@@ -49,6 +117,7 @@ const CheckoutPage = () => {
   if (cartItems.length === 0) {
     return (
       <main className={`min-h-screen w-full bg-white ${poppins.className}`}>
+        <Toaster position="bottom-center" />
         <div className="flex flex-col items-center justify-center min-h-screen px-4">
           <h1 className="text-3xl font-bold mb-4">Your cart is empty</h1>
           <button
@@ -64,6 +133,7 @@ const CheckoutPage = () => {
 
   return (
     <main className={`min-h-screen w-full bg-white ${poppins.className}`}>
+      <Toaster position="bottom-center" />
       {/* Header */}
       <div className="border-b border-gray-200">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
@@ -379,10 +449,11 @@ const CheckoutPage = () => {
             <div className="hidden lg:block">
               <button
                 type="submit"
-                className="w-full py-4 rounded-full bg-black hover:bg-gray-800 text-white font-semibold text-lg shadow-lg transition-all duration-200 flex items-center justify-center gap-2"
+                disabled={isSubmitting}
+                className="w-full py-4 rounded-full bg-black hover:bg-gray-800 text-white font-semibold text-lg shadow-lg transition-all duration-200 flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 <Lock size={20} />
-                Place Order - Rs {total.toFixed(0)}
+                {isSubmitting ? 'Processing...' : `Place Order - Rs ${total.toFixed(0)}`}
               </button>
               <p className="text-xs text-gray-500 text-center mt-3">
                 Your payment information is secure and encrypted
@@ -463,10 +534,11 @@ const CheckoutPage = () => {
               <button
                 type="button"
                 onClick={handleSubmit(onSubmit)}
-                className="w-full py-4 rounded-full bg-black hover:bg-gray-800 text-white font-semibold text-lg shadow-lg transition-all duration-200 flex items-center justify-center gap-2"
+                disabled={isSubmitting}
+                className="w-full py-4 rounded-full bg-black hover:bg-gray-800 text-white font-semibold text-lg shadow-lg transition-all duration-200 flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 <Lock size={20} />
-                Place Order - Rs {total.toFixed(0)}
+                {isSubmitting ? 'Processing...' : `Place Order - Rs ${total.toFixed(0)}`}
               </button>
               <p className="text-xs text-gray-500 text-center mt-3">
                 Your payment information is secure and encrypted
@@ -492,6 +564,39 @@ const CheckoutPage = () => {
         </div>
       </section>
     </main>
+  );
+};
+
+const CheckoutPage = () => {
+  const siteKey = process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY;
+  
+  // If no valid reCAPTCHA key, render without provider
+  if (!siteKey || siteKey === 'your_recaptcha_site_key_here') {
+    return <CheckoutForm />;
+  }
+
+  return (
+    <ReCaptchaProvider 
+      reCaptchaKey={siteKey}
+      useEnterprise={false}
+      useRecaptchaNet={false}
+      scriptProps={{
+        async: true,
+        defer: true,
+        appendTo: 'head',
+      }}
+      container={{
+        element: 'recaptcha-container',
+        parameters: {
+          badge: 'inline',
+          theme: 'light',
+        }
+      }}
+    >
+      <CheckoutForm />
+      {/* Hidden reCAPTCHA badge container */}
+      <div id="recaptcha-container" style={{ display: 'none' }}></div>
+    </ReCaptchaProvider>
   );
 };
 

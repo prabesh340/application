@@ -88,16 +88,7 @@ export const cans1 = [
     original_cost: "Rs 1000",
     discounted_cost: "Rs 1500",
     maxQuantity: 10,
-  },
-   {
-    id: 4,
-    name: "all-tase",
-    imgUrl: "/images/7.webp",
-    color: "red+orange+lime",
-    original_cost: "Rs 1000",
-    discounted_cost: "Rs 1500",
-    maxQuantity: 10,
-  },
+  }
 ];
 
 // Shipping and Tax Configuration

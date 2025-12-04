@@ -95,7 +95,7 @@ const Floatingcart = () => {
                                                 >
                                                     <div className="flex gap-4 sm:gap-6">
                                                         {/* Product Image */}
-                                                        <div className="relative w-20 h-20 sm:w-28 sm:h-28 bg-gray-100 rounded-lg flex-shrink-0 overflow-hidden">
+                                                        <div className="relative w-20 h-20 sm:w-28 sm:h-28 bg-gray-100 rounded-lg shrink-0 overflow-hidden">
                                                             <img 
                                                                 src={item.imgUrl} 
                                                                 alt={item.name} 
@@ -114,7 +114,7 @@ const Floatingcart = () => {
                                                                 </div>
                                                                 <button
                                                                     onClick={() => removeFromCart(item.id)}
-                                                                    className="p-1.5 text-gray-400 hover:text-red-500 hover:bg-red-50 rounded-lg transition-colors flex-shrink-0"
+                                                                    className="p-1.5 text-gray-400 hover:text-red-500 hover:bg-red-50 rounded-lg transition-colors shrink-0"
                                                                 >
                                                                     <Trash2 size={18} />
                                                                 </button>
