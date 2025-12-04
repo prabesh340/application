@@ -91,11 +91,10 @@ export const cans1 = [
   }
 ];
 
-// Shipping and Tax Configuration
 export const shippingConfig = {
-  freeShippingThreshold: 500, // Free shipping above Rs 5000
-  shippingCost: 80, // Shipping cost Rs 100
-  taxRate: 0.13, // 13% tax rate
+  freeShippingThreshold: 499, 
+  shippingCost: 80, 
+  taxRate: 0.13, 
 };
 
 export { navLinks, NavImage, defaultImg, fruits, cans1 };
