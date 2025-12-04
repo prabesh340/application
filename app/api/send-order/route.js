@@ -293,7 +293,7 @@ export async function POST(request) {
 
     // Buyer confirmation email options
     const buyerMailOptions = {
-      from: `"Lexi - Your Way" <${process.env.EMAIL_USER}>`,
+      from: `"Lexi - Drink Your Way" <${process.env.EMAIL_USER}>`,
       to: orderData.contactInfo.email,
       subject: `Order Confirmation - Rs ${total.toFixed(0)}`,
       html: buyerEmailHTML,
