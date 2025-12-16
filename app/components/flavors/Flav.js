@@ -38,7 +38,7 @@ const Flav = ({ id, name, imgUrl, color }) => {
           {/* Flavor Text */}
           <div className="absolute bottom-0 left-0 p-4 sm:p-6 z-20">
             <h2
-              className="text-[#FAEADE] text-5xl sm:text-6xl md:text-7xl font-black uppercase tracking-tight"
+              className="text-[#ffffff] text-5xl sm:text-6xl md:text-7xl font-black uppercase tracking-tight"
               style={{
                 fontFamily: "Antonio, sans-serif",
                 letterSpacing: "-0.05em",
