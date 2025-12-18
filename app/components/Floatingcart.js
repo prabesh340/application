@@ -6,6 +6,7 @@ import gsap from "gsap";
 import { useCart } from "../../contexts/CartContext";
 import { useRouter } from "next/navigation";
 import { shippingConfig } from "../../constants";
+import MagnetEffect from "./gsap/MagnetEffect";
 
 const Floatingcart = () => {
     const bgRef = useRef(null);
@@ -246,7 +247,10 @@ const Floatingcart = () => {
             </div>
             
             {/* Floating Cart Button */}
+            <MagnetEffect>
+
             <div className="relative">
+                
                 <div 
                     ref={buttonRef} 
                     className="p-4 cursor-pointer bg-white text-black rounded-full   transition-all" 
@@ -260,6 +264,8 @@ const Floatingcart = () => {
                     )}
                 </div>
             </div>
+
+            </MagnetEffect>
         </div>
     );
 };
