@@ -7,6 +7,7 @@ import { SmoothScrollProvider } from "./components/ScrollsmoothProdiver";
 import Fottor from "./components/Fottor";
 import Floatingcart from "./components/Floatingcart";
 import { CartProvider } from "../contexts/CartContext";
+import MagnetEffect from "./components/gsap/MagnetEffect";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -20,7 +21,8 @@ const geistMono = Geist_Mono({
 
 export const metadata = {
   title: "Lexi- Drink your way",
-  description: "Lexi — a refreshing beverage experience crafted to energize your moments. Explore bold flavors, smooth blends, and a lifestyle built around taste, creativity, and enjoyment. Drink your way with Lexi.",
+  description:
+    "Lexi — a refreshing beverage experience crafted to energize your moments. Explore bold flavors, smooth blends, and a lifestyle built around taste, creativity, and enjoyment. Drink your way with Lexi.",
 };
 
 export default function RootLayout({ children }) {
@@ -33,10 +35,11 @@ export default function RootLayout({ children }) {
           <SmoothScrollProvider />
 
           <Loader />
-          <Floatingcart/>
+            <Floatingcart />
+
           <Header />
           {children}
-          <Fottor/>
+          <Fottor />
         </CartProvider>
       </body>
     </html>
